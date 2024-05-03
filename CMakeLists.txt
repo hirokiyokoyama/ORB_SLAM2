@@ -75,8 +75,6 @@ src/Initializer.cc
 target_link_libraries(${PROJECT_NAME}
 ${OpenCV_LIBS}
 ${EIGEN3_LIBS}
-#${PROJECT_SOURCE_DIR}/Thirdparty/DBoW2/lib/libDBoW2.so
-#${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o.so
 DBoW2
 g2o
 )
@@ -85,6 +83,8 @@ g2o
 pybind11_add_module(orbslam2
 py_src/bind.cc
 py_src/System.cc
+py_src/MapPoint.cc
+py_src/cv.cc
 ${PROJECT_SOURCE_DIR}/Thirdparty/pybind11_opencv_numpy/ndarray_converter.cpp
 )
 

@@ -1,4 +1,5 @@
 #include "py_src/System.h"
+#include "py_src/MapPoint.h"
 
 using namespace ORB_SLAM2;
 
@@ -18,7 +19,19 @@ void bind_System(py::module& m) {
         .def("save_key_frame_trajectoryTUM", &System::SaveKeyFrameTrajectoryTUM)
         .def("save_trajectoryKITTI", &System::SaveTrajectoryKITTI)
         .def("get_tracking_state", &System::GetTrackingState)
-        .def("get_tracked_map_points", &System::GetTrackedMapPoints)
+        .def("get_tracked_map_points", [](System& sys) {
+            std::vector<MapPoint*> src = sys.GetTrackedMapPoints();
+            std::vector<MapPointView*> dst;
+            dst.reserve(src.size());
+            for(std::vector<MapPoint*>::iterator it=src.begin(); it!=src.end(); ++it) {
+                if(!*it) {
+                    dst.push_back(nullptr);
+                    continue;
+                } 
+                dst.push_back(new MapPointView(*it));
+            }
+            return dst;
+        })
         .def("get_tracked_key_points", &System::GetTrackedKeyPointsUn);
 
     py::enum_<System::eSensor>(system, "Sensor")
