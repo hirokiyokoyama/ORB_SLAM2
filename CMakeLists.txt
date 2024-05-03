@@ -28,6 +28,8 @@ endif()
 
 LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
 
+add_subdirectory(Thirdparty/pybind11)
+
 find_package(OpenCV 3.0 QUIET)
 if(NOT OpenCV_FOUND)
    find_package(OpenCV 2.4.3 QUIET)
@@ -44,6 +46,8 @@ ${PROJECT_SOURCE_DIR}
 ${PROJECT_SOURCE_DIR}/include
 ${EIGEN3_INCLUDE_DIR}
 ${Pangolin_INCLUDE_DIRS}
+${PROJECT_SOURCE_DIR}/Thirdparty/pybind11/include
+${PROJECT_SOURCE_DIR}/Thirdparty/pybind11_opencv_numpy
 )
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
@@ -78,6 +82,13 @@ ${PROJECT_SOURCE_DIR}/Thirdparty/DBoW2/lib/libDBoW2.so
 ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o.so
 )
 
+# Build Python module
+pybind11_add_module(orbslam2
+py_src/bind.cc
+py_src/System.cc
+)
+target_link_libraries(orbslam2 ${PROJECT_NAME})
+
 # Build examples
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/RGB-D)
@@ -95,7 +106,6 @@ target_link_libraries(stereo_kitti ${PROJECT_NAME})
 add_executable(stereo_euroc
 Examples/Stereo/stereo_euroc.cc)
 target_link_libraries(stereo_euroc ${PROJECT_NAME})
-
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Monocular)
 
