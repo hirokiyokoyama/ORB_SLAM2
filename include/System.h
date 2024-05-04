@@ -117,6 +117,13 @@ public:
     std::vector<MapPoint*> GetTrackedMapPoints();
     std::vector<cv::KeyPoint> GetTrackedKeyPointsUn();
 
+    std::vector<MapPoint*> GetAllMapPoints() {
+        return mpMap->GetAllMapPoints();
+    }
+    std::vector<KeyFrame*> GetAllKeyFrames() {
+        return mpMap->GetAllKeyFrames();
+    }
+
 private:
 
     // Input sensor

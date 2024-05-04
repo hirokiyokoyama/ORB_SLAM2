@@ -1,7 +1,18 @@
 #include "py_src/System.h"
 #include "py_src/MapPoint.h"
+#include "py_src/KeyFrame.h"
 
 using namespace ORB_SLAM2;
+
+template <typename T, typename V>
+std::vector<std::shared_ptr<V> > convert_all(std::vector<T*> src) {
+    std::vector<std::shared_ptr<V> > dst;
+    dst.reserve(src.size());
+    for(typename vector<T*>::iterator it=src.begin(); it!=src.end(); ++it) {
+        dst.push_back(V::get_instance(*it, true));
+    }
+    return dst;
+}
 
 void bind_System(py::module& m) {
     py::class_<System> system(m, "System");
@@ -20,19 +31,15 @@ void bind_System(py::module& m) {
         .def("save_trajectoryKITTI", &System::SaveTrajectoryKITTI)
         .def("get_tracking_state", &System::GetTrackingState)
         .def("get_tracked_map_points", [](System& sys) {
-            std::vector<MapPoint*> src = sys.GetTrackedMapPoints();
-            std::vector<MapPointView*> dst;
-            dst.reserve(src.size());
-            for(std::vector<MapPoint*>::iterator it=src.begin(); it!=src.end(); ++it) {
-                if(!*it) {
-                    dst.push_back(nullptr);
-                    continue;
-                } 
-                dst.push_back(new MapPointView(*it));
-            }
-            return dst;
+            return convert_all<MapPoint,MapPointView>(sys.GetTrackedMapPoints());
         })
-        .def("get_tracked_key_points", &System::GetTrackedKeyPointsUn);
+        .def("get_tracked_key_points", &System::GetTrackedKeyPointsUn)
+        .def("get_all_map_points", [](System& sys) {
+            return convert_all<MapPoint,MapPointView>(sys.GetAllMapPoints());
+        })
+        .def("get_all_key_frames", [](System& sys) {
+            return convert_all<KeyFrame,KeyFrameView>(sys.GetAllKeyFrames());
+        });
 
     py::enum_<System::eSensor>(system, "Sensor")
         .value("MONOCULAR", System::eSensor::MONOCULAR)

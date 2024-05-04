@@ -1,5 +1,6 @@
 #include "py_src/cv.h"
 #include "py_src/MapPoint.h"
+#include "py_src/KeyFrame.h"
 #include "py_src/System.h"
 
 PYBIND11_MODULE(orbslam2, m) {
@@ -9,5 +10,6 @@ PYBIND11_MODULE(orbslam2, m) {
 
     bind_cv(m);
     bind_MapPoint(m);
+    bind_KeyFrame(m);
     bind_System(m);
 }

@@ -107,7 +107,6 @@ cv::Mat KeyFrame::GetStereoCenter()
     return Cw.clone();
 }
 
-
 cv::Mat KeyFrame::GetRotation()
 {
     unique_lock<mutex> lock(mMutexPose);

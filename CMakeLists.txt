@@ -84,6 +84,7 @@ pybind11_add_module(orbslam2
 py_src/bind.cc
 py_src/System.cc
 py_src/MapPoint.cc
+py_src/KeyFrame.cc
 py_src/cv.cc
 ${PROJECT_SOURCE_DIR}/Thirdparty/pybind11_opencv_numpy/ndarray_converter.cpp
 )
